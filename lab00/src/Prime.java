@@ -1,14 +1,26 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 public class Prime extends Thread {
     int n;
+    String file;
 
-    public Prime(int n) {
+    public Prime(int n, String file) {
+
         this.n = n;
+        this.file= file;
     }
 
-    static int[] prime(int n) {
+    static void prime(int n, String file) throws IOException{
         int number = 2;
         int count = 0;
-        int[] a = new int[n];
+
+        FileWriter fileWriter = new FileWriter(file);
+        PrintWriter printWriter = new PrintWriter(fileWriter);
 
         while (count != n) {
             boolean prime = true;
@@ -21,16 +33,26 @@ public class Prime extends Thread {
             }
 
             if (prime) {
-                a[count] = number;
+                printWriter.println(number);
                 count++;
             }
             number++;
+
+
         }
-        return a;
+            printWriter.close();
     }
 
 
-    public void run(int n) {
-        prime(n);
+
+    public void run() {
+
+        try {
+            prime(n,file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }
