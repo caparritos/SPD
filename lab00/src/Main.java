@@ -7,39 +7,41 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner myObj = new Scanner(System.in);  // Create a Scanner object
-        String input = myObj.nextLine();
-        String[] arrOfStr = input.split(" ");
-        int n = Integer.parseInt(arrOfStr[0]);
-        String file = arrOfStr[1];
-        Prime t1 = new Prime(n,file);
+        Scanner scanner = new Scanner(System.in);
+        String file = "";
+        int n;
+        if(args.length > 0)
+        {
+            n = Integer.parseInt(args[0]);
+            file = args[0]+".txt";
+        }
+        else
+        {
+            String[] input = scanner.nextLine().split(" ");
+            n = Integer.parseInt(input[0]);
+            file = input[1];
+        }
+        Prime t1 = new Prime(n, file);
         CreateFile t2 = new CreateFile(file);
-        //writeinfile t3 = new writeinfile(a, file);
 
-        Thread createFile = new Thread(t2);
+
         Thread primes = new Thread(t1);
-
-        //Thread writeinfile = new Thread(t3);
+        Thread createFile = new Thread(t2);
 
 
         long start = System.currentTimeMillis();
         createFile.start();
         primes.start();
 
-        //writeinfile.start();
-
         try {
-            // join() method waits for the thread to die
             createFile.join();
             primes.join();
-
-            //writeinfile.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         long end = System.currentTimeMillis();
         long total = end - start;
         System.out.println(total);
-
+        scanner.close();
     }
 }
