@@ -42,17 +42,6 @@ public class Lab0 {
         return a;
     }
 
-    public static double calculateAverageExecutionTime(int n) {
-        int trials = 30;
-        double totalTime = 0;
-        for (int i = 0; i < trials; i++) {
-            long time = System.currentTimeMillis();
-            prime(n);
-            totalTime += System.currentTimeMillis() - time;
-        }
-        return totalTime / trials;
-    }
-
     public static void main(String[] args) throws IOException {
         Scanner myObj = new Scanner(System.in);
         String input = myObj.nextLine();
