@@ -1,43 +1,57 @@
-import java.util.Scanner;
+//first version without threads
 
+import java.util.Scanner;
+import java.io.*;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        String file = "";
-        int n;
-        if(args.length > 0)
-        {
-            n = Integer.parseInt(args[0]);
-            file = args[0]+".txt";
+    public static void createFile(String inputFileName) throws IOException {
+        File myObj = new File(inputFileName);
+        if (myObj.createNewFile()) {
+            System.out.println("File created: " + myObj.getName());
         }
-        else
-        {
-            String[] input = scanner.nextLine().split(" ");
-            n = Integer.parseInt(input[0]);
-            file = input[1];
+        else {
+            System.out.println("File already exists.");
         }
-        Prime t1 = new Prime(n, file);
-        CreateFile t2 = new CreateFile(file);
+    }
 
+    private static int[] prime(int n) {
+        int number = 2;
+        int count = 0;
+        int[] a = new int[n];
 
-        Thread primes = new Thread(t1);
-        Thread createFile = new Thread(t2);
+        while (count != n) {
+            boolean prime = true;
 
+            for (int i = 2; i <= Math.sqrt(number); i++) {
+                if (number % i == 0) {
+                    prime = false;
+                    break;
+                }
+            }
 
-        long start = System.currentTimeMillis();
-        createFile.start();
-        primes.start();
-
-        try {
-            createFile.join();
-            primes.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            if (prime) {
+                a[count] = number;
+                count++;
+            }
+            number++;
         }
-        long end = System.currentTimeMillis();
-        long total = end - start;
-        System.out.println(total);
-        scanner.close();
+        return a;
+    }
+
+    public static void main(String[] args) throws IOException {
+        Scanner myObj = new Scanner(System.in);
+        String input = myObj.nextLine();
+        String[] arrOfStr = input.split(" ");
+        int n = Integer.parseInt(arrOfStr[0]);
+        createFile(arrOfStr[1]);
+        int[] a = prime(n);
+        FileWriter fileWriter = new FileWriter(arrOfStr[1]);
+        PrintWriter printWriter = new PrintWriter(fileWriter);
+
+        for (int i = 0; i < n; i++)
+            printWriter.println(a[i]);
+
+        printWriter.close();
     }
 }
+
