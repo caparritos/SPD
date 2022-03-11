@@ -4,18 +4,14 @@ import java.util.Scanner;
 import java.io.*;
 
 public class Lab0 {
-    public static void createFile(String inputFileName) {
-        try {
+    public static void createFile(String inputFileName) throws IOException {
             File myObj = new File(inputFileName);
             if (myObj.createNewFile()) {
                 System.out.println("File created: " + myObj.getName());
-            } else {
+            } 
+            else {
                 System.out.println("File already exists.");
             }
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
     }
 
     private static int[] prime(int n) {
