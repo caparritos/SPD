@@ -1,4 +1,4 @@
-#LABS
+# LABS
 
 [Lab 00](#lab00)
 
