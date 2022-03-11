@@ -1,4 +1,4 @@
-# LABS
+# LABORATÓRIOS
 
 [Lab 00](#lab00)
 
