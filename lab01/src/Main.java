@@ -20,12 +20,9 @@ public class Main {
         Prime t1 = new Prime(n, file);
         CreateFile t2 = new CreateFile(file);
 
-
         Thread primes = new Thread(t1);
         Thread createFile = new Thread(t2);
 
-
-        long start = System.currentTimeMillis();
         createFile.start();
         primes.start();
 
@@ -35,9 +32,7 @@ public class Main {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        long end = System.currentTimeMillis();
-        long total = end - start;
-        System.out.println(total);
+        
         scanner.close();
     }
 }
