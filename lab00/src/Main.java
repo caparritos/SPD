@@ -39,13 +39,23 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
-        Scanner myObj = new Scanner(System.in);
-        String input = myObj.nextLine();
-        String[] arrOfStr = input.split(" ");
-        int n = Integer.parseInt(arrOfStr[0]);
-        createFile(arrOfStr[1]);
+        Scanner scanner = new Scanner(System.in);
+        String file = "";
+        int n;
+        if(args.length > 0)
+        {
+            n = Integer.parseInt(args[0]);
+            file = args[0]+".txt";
+        }
+        else
+        {
+            String[] input = scanner.nextLine().split(" ");
+            n = Integer.parseInt(input[0]);
+            file = input[1];
+        }
+        createFile(file);
         int[] a = prime(n);
-        FileWriter fileWriter = new FileWriter(arrOfStr[1]);
+        FileWriter fileWriter = new FileWriter(file);
         PrintWriter printWriter = new PrintWriter(fileWriter);
 
         for (int i = 0; i < n; i++)
