@@ -1,0 +1,60 @@
+        -:    0:Source:sequencial.c
+        -:    0:Graph:sequencial.gcno
+        -:    0:Data:sequencial.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:#include<stdio.h> 
+        -:    2:#include<stdbool.h> 
+        -:    3:#include<math.h>
+        -:    4:
+        -:    5:
+        1:    6:int prime(int *a,int n) {
+        1:    7:    int number = 2;
+        1:    8:    int count=0;
+ 15485863:    9:    while(count != n)
+        -:   10:    {
+ 15485862:   11:        bool prime = true;
+3251130383:   12:        for(int i = 2; i <= sqrt(number); i++)
+        -:   13:        {
+3250130383:   14:            if(number % i == 0)
+        -:   15:            {
+ 14485862:   16:                prime = false;
+ 14485862:   17:                break;
+        -:   18:            }
+3235644521:   19:        }
+ 15485862:   20:        if(prime)
+        -:   21:        {
+  1000000:   22:            a[count]=number;
+  1000000:   23:            count++;
+  1000000:   24:        }
+ 15485862:   25:        number++;
+        -:   26:    }
+        1:   27:       return count; 
+        -:   28:}
+        -:   29:
+        1:   30:void ints_fprint(FILE *f, const int *a, int n, const char *separator)
+        -:   31:{
+        1:   32:  if (n > 0)
+        -:   33:  {
+        1:   34:    fprintf(f, "%d", a[0]);
+  1000000:   35:    for (int i = 1; i < n; i++)  // i = 1
+   999999:   36:      fprintf(f, "%s%d", separator, a[i]);
+        1:   37:  }
+        1:   38:}
+        -:   39:
+        -:   40:
+        1:   41:int main() 
+        -:   42:{ 
+        -:   43:    int n;
+        -:   44:    char filename [100]; 
+        -:   45:    FILE *fp; 
+        1:   46:    scanf("%d %s", &n, filename);
+        1:   47:    int a[n];
+        1:   48:    prime(a,n);
+        1:   49:    fp = fopen(filename, "w"); 
+        1:   50:    ints_fprint(fp,a,n,"\n");
+        -:   51:    // closing the file pointer 
+        1:   52:    fclose(fp); 
+        -:   53:
+        1:   54:    return 0; 
+        1:   55:}
