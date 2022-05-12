@@ -10,29 +10,29 @@ int my_rank;
 
 bool isPrime(int n)
 {
-    bool prime=true;
-    if(n == 2 || n == 3 || n == 5) 
+    bool prime = true;
+    if (n == 2 || n == 3 || n == 5)
         return true;
-    if(n <= 1 || (n&1) == 0)
+    if (n <= 1 || (n & 1) == 0)
         return false;
-    for(int i = 3; i <= (int)sqrt(n); i += 2)
+    for (int i = 3; i <= (int)sqrt(n); i += 2)
     {
-	    if(n % i == 0) 
-            prime=false;
-        if(!prime)
+        if (n % i == 0)
+            prime = false;
+        if (!prime)
             break;
-    }   
-    return prime; 
+    }
+    return prime;
 }
 
 int primeNumber(int *a, int min, int max)
 {
-    int count=0;
+    int count = 0;
     for (int i = min; i <= max; i++)
     {
-        if(isPrime(i))
+        if (isPrime(i))
         {
-            a[count++]=i;
+            a[count++] = i;
         }
     }
     return count;
@@ -43,28 +43,31 @@ int main(int argc, char *argv[])
     int n = atoi(argv[1]);
     FILE *fp = fopen(argv[2], "w");
 
-    double start = MPI_Wtime();
+    //  double start = MPI_Wtime();
     MPI_Init(NULL, NULL);
     MPI_Comm_size(MPI_COMM_WORLD, &process_count);
-    MPI_Comm_rank(MPI_COMM_WORLD,&my_rank);
+    MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
 
     int limit;
-    if (n < 6) 
-        limit=12;
+    if (n < 6)
+        limit = 12;
     else
-        limit=ceil(n * (log(n) + log(log(n))));
-    double delta = (double)limit/process_count;
-    int min = (my_rank == 0)? 2 : (int)(my_rank*delta) + 1;
-    int max = (my_rank == process_count-1)? limit : (int)((my_rank+1)*delta);
+        limit = ceil(n * (log(n) + log(log(n))));
+    double delta = (double)limit / process_count;
+    int min = (my_rank == 0) ? 2 : (int)(my_rank * delta) + 1;
+    int max = (my_rank == process_count - 1) ? limit : (int)((my_rank + 1) * delta);
 
     int *results;
-    if (my_rank == 0) {
-        results = (int *) malloc(delta * sizeof (int));
-    } else {
-        results = (int *) malloc(delta * sizeof (int));
+    if (my_rank == 0)
+    {
+        results = (int *)malloc(delta * sizeof(int));
+    }
+    else
+    {
+        results = (int *)malloc(delta * sizeof(int));
     }
 
-    int n_primes=primeNumber(results, min, max);
+    int n_primes = primeNumber(results, min, max);
 
     MPI_Barrier(MPI_COMM_WORLD);
 
@@ -72,35 +75,38 @@ int main(int argc, char *argv[])
     MPI_Reduce(&n_primes, &number_all_primes, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
     int *final_results, *recvcounts;
-    if (my_rank == 0) {
-        recvcounts = malloc(process_count * sizeof(int)) ;
-        final_results = malloc (sizeof(int) * number_all_primes);
+    if (my_rank == 0)
+    {
+        recvcounts = malloc(process_count * sizeof(int));
+        final_results = malloc(sizeof(int) * number_all_primes);
     }
 
     MPI_Gather(&n_primes, 1, MPI_INT, recvcounts, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
     int *displs;
-    if (my_rank == 0) {
+    if (my_rank == 0)
+    {
         displs = malloc(process_count * sizeof(int));
         displs[0] = 0;
-        for (int i=1; i<process_count; i++) {
-           displs[i] = displs[i-1] + recvcounts[i-1];
+        for (int i = 1; i < process_count; i++)
+        {
+            displs[i] = displs[i - 1] + recvcounts[i - 1];
         }
     }
 
     MPI_Gatherv(results, n_primes, MPI_INT, final_results, recvcounts, displs, MPI_INT, 0, MPI_COMM_WORLD);
 
-    MPI_Barrier(MPI_COMM_WORLD);
-
-    if (my_rank == 0) {
-        for (int i = 0; i < n; i++) {
-            fprintf(fp, "%d\n" , final_results[i]);
+    if (my_rank == 0)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            fprintf(fp, "%d\n", final_results[i]);
         }
     }
 
     MPI_Finalize();
-    double elapsed = MPI_Wtime() - start;
-    printf("\nElapsed time:  %1.3f seconds.\n", elapsed);
+    //    double elapsed = MPI_Wtime() - start;
+    //    printf("\nElapsed time:  %1.3f seconds.\n", elapsed);
 
     return 0;
 }
